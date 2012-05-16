@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<folder name="folder">
+    <folder name="sub-folder">
+        <folder name="sub-sub-folder">
+            <file name="README"><![CDATA[This is a README file]]></file>
+            <file name="source.php"><![CDATA[<?php echo "This is a source file"; ?>]]></file>
+        </folder>
+    </folder>
+</folder>
