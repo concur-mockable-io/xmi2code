@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:uml="http://schema.omg.org/spec/UML/2.1"
+                xmlns:xmi="http://schema.omg.org/spec/XMI/2.1">
+
+<xsl:output method="xml" encoding="utf-8" indent="yes" />
+<xsl:strip-space elements="*"/>
+
+<xsl:key name="element" match="packagedElement" use="@xmi:id"/>
+
+<xsl:template match="/">
+<model>
+<xsl:apply-templates select="//packagedElement[@xmi:type='uml:Class']" />
+</model>
+</xsl:template>
+
+<!-- Class template - START -->
+<xsl:template match="packagedElement[@xmi:type='uml:Class']">
+  <class>
+    <xsl:attribute name="name">
+      <xsl:value-of select="@name" />
+    </xsl:attribute>
+    <xsl:if test="@isAbstract='true'">
+      <xsl:attribute name="abstract">
+        <xsl:text>true</xsl:text>
+      </xsl:attribute>
+    </xsl:if>
+    <xsl:apply-templates select="ownedAttribute" />
+    <xsl:apply-templates select="ownedOperation" />
+  </class>
+</xsl:template>
+<!-- Class template - END -->
+
+<!-- Class attributes template - START -->
+<xsl:template match="ownedAttribute[@xmi:type='uml:Property']">
+<attribute>
+  <xsl:attribute name="name">
+    <xsl:value-of select="@name" />
+  </xsl:attribute>
+  <xsl:attribute name="visibility">
+    <xsl:value-of select="@visibility" />
+  </xsl:attribute>
+</attribute>
+</xsl:template>
+<!-- Class attributes template - END --> 
+
+<!-- Class operations template - START -->
+<xsl:template match="ownedOperation[@xmi:type='uml:Operation']">
+<method>
+  <xsl:attribute name="name">
+    <xsl:value-of select="@name" />
+  </xsl:attribute>
+  <xsl:attribute name="visibility">
+    <xsl:value-of select="@visibility" />
+  </xsl:attribute>
+  <xsl:apply-templates select="ownedParameter" />
+</method>
+</xsl:template>
+<!-- Class operations template - END -->
+
+<!-- Operation parameters template - START -->
+<xsl:template match="ownedParameter[@xmi:type='uml:Parameter']">
+  <parameter>
+    <xsl:attribute name="name">
+      <xsl:value-of select="@name" />
+    </xsl:attribute>
+    <xsl:attribute name="type">
+      <xsl:value-of select="key('element',type/@xmi:idref)/@name" />
+    </xsl:attribute>
+  </parameter>
+</xsl:template>
+<!-- Operation parameters template - END -->
+
+<xsl:template match="*">
+  <xsl:apply-templates />
+</xsl:template>
+
+</xsl:stylesheet> 
