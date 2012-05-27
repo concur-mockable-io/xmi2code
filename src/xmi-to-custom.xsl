@@ -26,10 +26,26 @@
 <xsl:key name="element" match="packagedElement" use="@xmi:id"/>
 
 <xsl:template match="/">
+<xsl:apply-templates select="./*" />
+</xsl:template>
+
+<xsl:template match="uml:Model">
 <model>
-<xsl:apply-templates select="//packagedElement[@xmi:type='uml:Class']" />
+<xsl:apply-templates select="packagedElement[@xmi:type='uml:Package']" />
 </model>
 </xsl:template>
+
+<!-- Package template - START -->
+<xsl:template match="packagedElement[@xmi:type='uml:Package']">
+  <package>
+    <xsl:attribute name="name">
+      <xsl:value-of select="@name" />
+    </xsl:attribute>
+    <xsl:apply-templates select="packagedElement[@xmi:type='uml:Class']" />
+    <xsl:apply-templates select="packagedElement[@xmi:type='uml:Package']" />
+  </package>
+</xsl:template>
+<!-- Package template - END -->
 
 <!-- Class template - START -->
 <xsl:template match="packagedElement[@xmi:type='uml:Class']">
