@@ -11,7 +11,7 @@ class DonkeyTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $xmi_code     = file_get_contents(dirname(__FILE__) . '/sample.xmi');
+        $xmi_code     = file_get_contents(dirname(__FILE__) . '/ezc.xmi');
         $this->result = XMI2Custom::transform($xmi_code);
 //var_dump($this->result);exit();
     }

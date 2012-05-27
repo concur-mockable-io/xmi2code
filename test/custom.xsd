@@ -39,6 +39,9 @@
 
 <xs:element name="method">
   <xs:complexType>
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="parameter" />
+    </xs:sequence>
     <xs:attribute name="type" type="xs:string" default="string" />
     <xs:attribute name="name" type="xs:string" use="required" />
     <xs:attribute name="visibility" type="xs:string" />
@@ -49,6 +52,13 @@
   <xs:complexType>
     <xs:attribute name="name" type="xs:string" use="required" />
     <xs:attribute name="visibility" type="xs:string" />
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="parameter">
+  <xs:complexType>
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="type" type="xs:string" default="string" />
   </xs:complexType>
 </xs:element>
 
