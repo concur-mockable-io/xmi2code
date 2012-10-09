@@ -1,7 +1,5 @@
 <?php
 
-namespace synap;
-
 class XMI2Custom
 {
     public function transform($code)
