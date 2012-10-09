@@ -1,11 +1,14 @@
 <?php
+
+namespace Synap;
+
 class Deployer
 {
     private $filename;
     private $breadcrumbs = array();
-    private $_tagStack = array();
+    private $tagStack = array();
 
-    public function __construct( $filename )
+    public function __construct($filename)
     {
         $this->filename = $filename;
     }
@@ -13,66 +16,76 @@ class Deployer
     public function deploy()
     {
         $xml_parser = xml_parser_create();
-        xml_set_element_handler( $xml_parser, array($this,'start'), array($this,'end') );
+        xml_set_element_handler($xml_parser, array($this,'start'), array($this,'end'));
         xml_set_character_data_handler($xml_parser, array($this,'put'));
-        xml_parse( $xml_parser, file_get_contents($this->filename));
+        xml_parse($xml_parser, file_get_contents($this->filename));
     }
 
-    private function start($parser, $tag, $attrs = null )
+    private function start($parser, $tag, $attrs = null)
     {
-        array_push($this->_tagStack,$tag);
+        array_push($this->tagStack, $tag);
 
         switch($tag)
         {
-            case 'FOLDER' : $this->visitFolder($attrs);break;
-            case 'FILE'   : $this->visitFile($attrs);break;
+            case 'FOLDER':
+                $this->visitFolder($attrs);
+                break;
+            case 'FILE':
+                $this->visitFile($attrs);
+                break;
         }
     }
 
-    private function end( $parser, $tag)
+    private function end($parser, $tag)
     {
-        array_pop($this->_tagStack);
+        array_pop($this->tagStack);
         array_pop($this->breadcrumbs);
     }
 
     private function visitFolder($attrs)
     {
-        if( empty($attrs['NAME']) )
-        {
+        if (empty($attrs['NAME'])) {
+
             throw new Exception('aucun nom fourni pour un dossier');
         }
+
         $name = $attrs['NAME'];
 
-        array_push( $this->breadcrumbs, $name);
+        array_push($this->breadcrumbs, $name);
 
-        $pathname = implode("/",$this->breadcrumbs);
+        $pathname = implode("/", $this->breadcrumbs);
 
-        if( !is_dir( $pathname ) )
-            mkdir( $pathname );
+        if (!is_dir($pathname)) {
+
+            mkdir($pathname);
+        }
     }
 
     private function visitFile($attrs)
     {
-        if( empty($attrs['NAME']) )
-        {
+        if (empty($attrs['NAME']) ) {
+
             throw new Exception('aucun nom fourni pour un dossier');
         }
+
         $name = $attrs['NAME'];
 
-        array_push( $this->breadcrumbs, $name);
-        echo implode("/",$this->breadcrumbs)."\n";
+        array_push($this->breadcrumbs, $name);
+
+        echo implode("/", $this->breadcrumbs)."\n";
     }
 
-    private function put($parser,$cdata)
+    private function put($parser, $cdata)
     {
-        $tag = array_pop( $this->_tagStack );
+        $tag = array_pop($this->tagStack);
+
         switch( $tag )
         {
-            case 'FILE' :file_put_contents(implode("/",$this->breadcrumbs), $cdata);
+            case 'FILE':
+                file_put_contents(implode("/", $this->breadcrumbs), $cdata);
+                break;
         }
-        array_push( $this->_tagStack, $tag);
+
+        array_push($this->tagStack, $tag);
     }
 }
-
-$d = new Deployer('sample-psm.xml');
-$d->deploy();
