@@ -13,6 +13,8 @@ class DonkeyTest extends PHPUnit_Framework_TestCase
     {
         $xmi_code     = file_get_contents(dirname(__FILE__) . '/sample.xmi');
 
+        use synap;
+
         $transformer  = new XMI2Custom();
         $this->result = $transformer->transform($xmi_code);
     }
