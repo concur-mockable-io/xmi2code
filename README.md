@@ -57,7 +57,7 @@ Copyright and license
 
 [![GNU Affero General Public License](http://www.gnu.org/graphics/agplv3-155x51.png)](http://www.gnu.org/licenses/agpl-3.0.html)
 
-Copyright (C) 2012 Synap System SARL
+Copyright (C) 2012-2014 Synap System EURL
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
